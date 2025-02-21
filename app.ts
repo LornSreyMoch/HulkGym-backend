@@ -22,6 +22,7 @@ import exercise from "./src/routes/exercise";
 
 
 import axios from "axios";
+import membershipPlan from "./src/routes/membership"
 
 // replace the value below with the Telegram token you receive from @BotFather
 const token = process.env.TELEGRAM_TOKEN || "";
@@ -46,6 +47,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Routes setuphttps://fboxmschac.sharedwithexpose.com
 app.use("/api/auth", auth);
 app.use("/api/activity", activity);
+app.use("/api/membership_plan", membershipPlan);
+
 
 app.use("/api/branch", branch);
 app.use("/api/branchContact", branchContact);

@@ -45,7 +45,7 @@ export const CreateWorkoutPlan = async (req: Request, res: Response) => {
                     sets: exercise.sets,
                     reps: exercise.reps,
                     weight: exercise.weight || null,
-                    caloriesBurned: exercise.caloriesBurned || 0,
+                    caloriesBurned: Number(exercise.caloriesBurned) || 0,
                     workout: savedWorkout
                 });
 

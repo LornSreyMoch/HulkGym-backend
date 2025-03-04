@@ -2,7 +2,7 @@ services:
   backend:
     build: .
     ports:
-      - "3002:3000"
+      - "3009:3000"
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
@@ -24,7 +24,7 @@ services:
     ports:
       - "5439:5432"
     volumes:
-      - postgres-data1:/var/lib/postgresql/data
+      - hulk-gym-db:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       - POSTGRES_USER=${DB_USERNAME}
@@ -42,8 +42,8 @@ services:
     depends_on:
       - database
     volumes:
-      - pgadmin-data:/var/lib/pgadmin
+      - pgadmin:/var/lib/pgadmin
 
 volumes:
-  postgres-data1:
-  pgadmin-data:
+  hulk-gym-db:
+  pgadmin:

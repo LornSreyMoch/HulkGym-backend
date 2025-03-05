@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { RoleEnum } from "../common/types/enum";
 import { Activity } from "./activity.entity";
+import { Promotion } from "./promotion.entity";
 
 @Entity({ name: "user_info" })
 export class UserInfo {
@@ -42,5 +43,9 @@ export class UserInfo {
   modifiedAt: Date;
 
   @OneToMany(() => Activity, (activity) => activity.user)
-  activities: Activity[]; // One user can have many activities
+  activities: Activity[];
+   // One user can have many activities
+//   @OneToMany(() => Promotion, (promotion) => promotion.user)
+//   promotions: Promotion
+
 }

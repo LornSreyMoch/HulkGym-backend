@@ -1,17 +1,20 @@
-import { encryptPassword } from "./../utils/encrypt";
 import { DataSource } from "typeorm";
-import { UserInfo } from "../entity/user.entity";
 import path from "path";
-
 import * as dotenv from "dotenv";
 
-const entitiesPath = path.join(__dirname, "../entity/**/*.{ts,js}");
-const migrationPath = path.join(__dirname, "/migrations/*.{ts,js}");
+// Import Entities
+import { UserInfo } from "../entity/user.entity";
+import { Promotion } from "../entity/promotion.entity";
+import { Coupon } from "../entity/coupon.entity";
+import { Activity } from "../entity/activity.entity"; // Ensure Activity is included
 
 dotenv.config();
 
-const { DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE, NODE_ENV } =
-  process.env;
+// Destructuring environment variables
+const { DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE, NODE_ENV } = process.env;
+
+// Resolving paths for migrations
+const migrationPath = path.join(__dirname, "/migrations/*.{ts,js}");
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -21,15 +24,9 @@ export const AppDataSource = new DataSource({
   password: DB_PASSWORD,
   database: DB_DATABASE,
   ssl: false,
-  synchronize: NODE_ENV === "dev" ? false : false,
-  //
-  //logging logs sql command on the treminal
-  logging: NODE_ENV === "dev" ? false : false,
-  // entities: [`${__dirname}**/entity/*.{ts,js}`],
-  entities: [entitiesPath],
-  // migrations: [`${__dirname}/**/migrations/*.{ts, js}`],
-  migrations: [migrationPath],
-  //   entities: [User],
-  // migrations: [__dirname + "/migration/*.ts"],
+  synchronize: NODE_ENV === "dev", // Auto-sync only in development
+  logging: NODE_ENV === "dev",
+  entities: [Promotion, Coupon, UserInfo, Activity], // Ensure all entities are registered
+  migrations: [migrationPath], 
   subscribers: [],
 });

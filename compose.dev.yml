@@ -1,0 +1,107 @@
+# version: '3.8'
+
+# services:
+#   # Backend service
+#   backend:
+#     build: .
+#     ports:
+#       - "3003:3000"  # Map port 3000 inside the container to 3003 on the host
+#     environment:
+#       DB_HOST: database
+#       DB_PORT: ${DB_PORT}        # Ensure this is defined in your .env file
+#       DB_USERNAME: ${DB_USERNAME}  # Ensure this is defined in your .env file
+#       DB_PASSWORD: ${DB_PASSWORD}  # Ensure this is defined in your .env file
+#       DB_DATABASE: ${DB_DATABASE}  # Ensure this is defined in your .env file
+#       NODE_ENV: ${NODE_ENV}        # Define NODE_ENV (production or development)
+#       JWT_SECRET: ${JWT_SECRET}    # Define JWT secret (for auth)
+#       TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}  # Define the Telegram bot token
+#     depends_on:
+#       - database  # Ensures the backend waits for the database service
+#     volumes:
+#       - .:/usr/src/app  # Mounts the current directory into the container
+#       - /usr/src/app/node_modules  # Ensures node_modules persist and are not overridden by the volume mount
+#     command: ["sh", "-c", "wait-for-it database:5432 -- npm run dev"]  # Wait for the DB to be ready before starting the app
+
+#   # Database service (PostgreSQL)
+#   database:
+#     image: postgres:14-alpine
+#     ports:
+#       - "5438:5432"  # Expose port 5432 on container to port 5438 on the host
+#     volumes:
+#       - postgres-data1:/var/lib/postgresql/data  # Persistent storage for PostgreSQL data
+#       - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Initialize DB with SQL file
+#     environment:
+#       POSTGRES_USER: ${DB_USERNAME}   # Ensure this is defined in your .env file
+#       POSTGRES_PASSWORD: ${DB_PASSWORD}  # Ensure this is defined in your .env file
+#       POSTGRES_DB: ${DB_DATABASE}     # Ensure this is defined in your .env file
+#     networks:
+#       - backend_network  # Ensure the database is part of a custom network
+
+#   # PgAdmin (optional, if you want a web interface for PostgreSQL)
+#   pgadmin:
+#     image: dpage/pgadmin4
+#     ports:
+#       - "5053:80"  # Access PgAdmin on port 5053
+#     environment:
+#       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}  # Set this in your .env file
+#       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}  # Set this in your .env file
+#     depends_on:
+#       - database  # Ensure PgAdmin waits for the database service
+#     networks:
+#       - backend_network  # Ensure PgAdmin is on the same network as the database
+
+# volumes:
+#   postgres-data1: {}  # Define persistent volume for PostgreSQL data
+#   pgadmin-data: {}    # Define persistent volume for PgAdmin data
+
+# networks:
+#   backend_network: {}  # Create a custom network for the services to communicate with each other
+
+
+services:
+  backend:
+    build: .
+    ports:
+      - "3002:3000"
+    environment:
+      DB_HOST: database
+      DB_PORT: ${DB_PORT}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
+      NODE_ENV: ${NODE_ENV}
+      JWT_SECRET: ${JWT_SECRET}
+      TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
+    depends_on:
+      - database
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+  database: 
+    image: postgres:14-alpine
+    ports:
+      - "5438:5432"
+    volumes:
+      - postgres-data1:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "5053:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+    depends_on:
+      - database
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+volumes:
+  postgres-data1:
+  pgadmin-data:

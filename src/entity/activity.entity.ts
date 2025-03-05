@@ -19,7 +19,7 @@ import {
     user: UserInfo; // Relationship with UserInfo entity
   
     @Column({ type: 'varchar', length: 30 })
-    title: string; // Activity title
+    title: string; // Activity titleA
   
     @Column({ type: 'varchar', length: 30 })
     icon: string; // Activity icon (emoji or text)
